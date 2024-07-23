@@ -5,8 +5,8 @@
 
 ## Description
 This project is developed in C++ on Ubuntu Linux
-It involves creating a web server capable:
-- of handling POST, DELETE, and GET methods
+It involves creating a web server capable of:
+- handling POST, DELETE, and GET methods
 - uploading files
 - hosting static sites
 - utilizing CGI
