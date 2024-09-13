@@ -36,6 +36,7 @@ t_master execute(std::string &locate, int fdc, server &server, const std::string
 bool endsWith(const std::string &str, const std::string &suffix);
 std::string ExtractFile(const std::string &directoryPath);
 std::string ExtractPath(const std::string &directoryPath);
+std::string ft_strtrim(std::string s1, std::string set);
 unsigned long long int stoull(const std::string &str);
 int check(int argc, char **argv, webserv *webservv);
 std::string readFile(const std::string &filePath);

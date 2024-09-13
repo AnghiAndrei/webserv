@@ -128,7 +128,7 @@ int main(int argc, char **argv, char **env){
 					}
 
 					if(webservv.servers[cli->second].locations[location].get_lridirect()==2){
-						if (url == location+webservv.servers[cli->second].locations[location].get_ridirect(0)) {
+						if ((location=="/" && url == webservv.servers[cli->second].locations[location].get_ridirect(0)) || url == location+webservv.servers[cli->second].locations[location].get_ridirect(0)) {
 							std::string newLocation=webservv.servers[cli->second].locations[location].get_ridirect(1);
 							responses[servers[i].fd]="HTTP/1.1 301 Moved Permanently\nLocation: "+newLocation+"\n\n";
 							std::cout<<"Risposta per: "<<servers[i].fd<<"; con: REDIRECT"<<std::endl;
@@ -222,7 +222,10 @@ int main(int argc, char **argv, char **env){
 							}
 						}
 
-						filePath = webservv.servers[cli->second].locations[location].get_root() + url;
+						filePath = webservv.servers[cli->second].locations[location].get_root()+url;
+						std::cout<<"FilePath Ori: "<<filePath<<std::endl;
+						filePath = webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location);
+						std::cout<<"FilePath New: "<<filePath<<std::endl;
 						if ((!fileExists(filePath.c_str()) && filePath[filePath.size() - 1] != '/') || (filePath[filePath.size() - 1] == '/' && !dirExists(filePath))){
 							filePath=webservv.servers[cli->second].get_error404();
 							ContentType=getext(filePath);
@@ -234,7 +237,7 @@ int main(int argc, char **argv, char **env){
 							std::cout<<"Risposta per: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
 							continue;
 						}else if(filePath[filePath.size()-1]=='/'){
-							filePath=webservv.servers[cli->second].locations[location].get_root()+url+webservv.servers[cli->second].locations[location].get_index();
+							filePath=webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location)+webservv.servers[cli->second].locations[location].get_index();
 							if(!fileExists(filePath.c_str()) || filePath[filePath.size()-1]=='/'){
 								ContentType="text/html";
 								content="<!DOCTYPE html><html><head><link rel='shortcut icon' href='./Assets/img/icona.jpg' type='image/x-icon'><style>*{text-decoration: none;color: rgb(255, 135, 211);}html{background-color:rgb(255, 211, 239);background-color: pink;height: 100vh;width: 100vw;margin: 0;padding: 0;}body{height: 100%;width: 100%;margin: 0;padding: 0;position: fixed;top: 0;}.centro,.centro2{background-color: white;border: 2px solid rgb(255, 129, 190);border-radius: 3%;margin-top: 5vh;padding: 30px;}.centro{width: 500px;}.centro2{width: 800px;}.sottotitolo, .sottotitolod{font-size: 25px;}.sottotitolod{text-align: left;}.titolo{font-size: 30px;}.link{text-decoration: underline;}.pulsanti{background-color: rgb(255, 184, 217);color: white;font-size: 20px;border: 2px solid rgb(255, 129, 190);border-radius: 3%;}.img{width: auto;height: 200px;}.linea{border: rgb(255, 135, 211) 1px solid;width: 80%;}</style><meta charset='UTF-8'><meta http-equiv='x-ua-compatible' content='ie=8'><meta name='keywords' content=''><meta name='author' content='Andrei Anghi[Angly colui che regna]'><meta name='viewport' content='width=device-width, initial-scale=1'><meta name='copyright' content='Andrei Anghi[Angly colui che regna]'><title>Nessun titolo | Wengly</title></head><body><center><div class='centro'><h1 class='titolo'>WebServer: Wengly</h1><br><br>";
@@ -242,7 +245,7 @@ int main(int argc, char **argv, char **env){
 									content+="<p class='sottotitolo'>File della cartella:";
 									DIR				*dir;
 									struct dirent	*entry;
-									dir=opendir((webservv.servers[cli->second].locations[location].get_root()+url).c_str());
+									dir=opendir((webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location)).c_str());
 									if(dir == NULL){
 										content+="<p class='sottotitolo'>Marshal: Errore in opendir</p></div></center></body></html>";										
 									}else{
