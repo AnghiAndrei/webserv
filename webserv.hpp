@@ -20,9 +20,10 @@
 #include<string>
 #include<vector>
 #include<poll.h>
+#include<ctime>
 #include<map>
 
-#define EXECUTION_TIME_LIMIT 10
+#define EXECUTION_TIME_LIMIT 30
 #define BUFFER_SIZE1 1
 #define BUFFER_SIZE 16384
 

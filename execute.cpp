@@ -1,10 +1,5 @@
 #include"webserv.hpp"
 
-void handle_alarm(int sig){
-	(void)sig;
-	kill(-1,SIGKILL);
-}
-
 t_master execute(std::string &locate, int fdc, server &server, const std::string &request, char **env, std::string &get_query, std::string &post_query) {
     t_master ris;
     int read_fd[2];
@@ -39,8 +34,6 @@ t_master execute(std::string &locate, int fdc, server &server, const std::string
         dup2(read_fd[1], STDERR_FILENO);
         close(write_fd[0]);
         close(read_fd[1]);
-        signal(SIGALRM, handle_alarm);
-        alarm(EXECUTION_TIME_LIMIT);
         std::vector<const char *> args;
         args.push_back(ExtractFile(cmdexe).c_str());
         args.push_back(request.c_str());
@@ -93,14 +86,27 @@ t_master execute(std::string &locate, int fdc, server &server, const std::string
             write(write_fd[1], post_query.c_str(), post_query.size());
         close(write_fd[1]);
         int status;
-        while (waitpid(pid, &status, 0) > 0) {
-            if (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM) {
-                ris.status = -1;
+		std::clock_t start = std::clock();
+		std::clock_t end = start;
+		while(true) {
+			end = std::clock();
+			if(static_cast<double>(end - start) / CLOCKS_PER_SEC >= EXECUTION_TIME_LIMIT + static_cast<double>(start) / CLOCKS_PER_SEC){
+				kill(pid, SIGKILL);
+				ris.status = -1;
                 ris.content = "Execute error: <br>Execution timed out";
-                break;
-            }
+				close(read_fd[0]);
+				return ris;
+			}
+			pid_t result = waitpid(pid, &status, WNOHANG);
+			if (result == -1) {
+				ris.status = -1;
+				ris.content = "Execute error: <br>waitpid error";
+				close(read_fd[0]);
+				return ris;
+			} else if (result > 0) {
+				break;
+			}
         }
-        alarm(0);
         if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
             ssize_t bytesRead;
             char buffer[BUFFER_SIZE];
