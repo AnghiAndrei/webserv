@@ -26,10 +26,8 @@ std::string ft_strtrim(std::string s1, std::string set)
 	for (size_t i2=0;set[i2]==s1[i]; i2++){
 		i++;
 	}
-	i--;
-	int n=0;
-	if(set=="/")n=1;
-	for (;i<s1.length()-n;i++)
+	
+	for (;i<s1.length();i++)
 		trimmed_str+=s1[i];
 	return (trimmed_str);
 }

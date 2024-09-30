@@ -222,8 +222,8 @@ int main(int argc, char **argv, char **env){
 							}
 						}
 
-						filePath = webservv.servers[cli->second].locations[location].get_root()+url;
 						filePath = webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location);
+						std::cout<<"File: "<<filePath<<std::endl;
 						if ((!fileExists(filePath.c_str()) && filePath[filePath.size() - 1] != '/') || (filePath[filePath.size() - 1] == '/' && !dirExists(filePath))){
 							filePath=webservv.servers[cli->second].get_error404();
 							ContentType=getext(filePath);

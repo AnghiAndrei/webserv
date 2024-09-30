@@ -9,12 +9,12 @@
         <meta name="author" content="Andrei Anghi[Angly colui che regna]">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="copyright" content="Andrei Anghi[Angly colui che regna]">
-        <title>Funzionalita | Wengly</title>
+        <title>Funzionalita Limitate | Wengly</title>
     </head>
     <body>
         <center>
             <div class="centro2">
-                <h1 class="titolo">Funzionalita del Web Server</h1>
+                <h1 class="titolo">Funzionalita del Web Server Limitate</h1>
                 <table>
                     <tr>
                         <td>
@@ -106,24 +106,7 @@
                         </td>
                     </tr>
                 </table>
-                <br>
-                <hr class="linea">
-                <p class="sottotitolod"><a target="_blank" class="link" href="cartella_no_index/">Vedi cartella senza index</a></p>
-                <p class="sottotitolod"><a target="_blank" class="link" href="cartella_inesistente/">Vedi error 404 con cartella</a></p>
-                <p class="sottotitolod"><a target="_blank" class="link" href="inesistente.html">Vedi error 404 con file</a></p>
-                <br>
-                <p class="sottotitolod"><a target="_blank" class="link" href="cgi.py">Vedi CGI con python</a></p>
-                <p class="sottotitolod"><a target="_blank" class="link" href="cgi.sh">Vedi CGI con shell</a></p>
-				<br>
-                <p class="sottotitolod"><a target="_blank" class="link" href="cgi2.py">Vedi: Errore di compilazione</a></p>
-                <p class="sottotitolod"><a target="_blank" class="link" href="cgi3.py">Vedi: Tempo di esecuzione massimo</a></p>
-                <br>
-                <p class="sottotitolod"><a target="_blank" class="link" href="/ripasso">Redirection</a></p>
-                <br>
-                <p class="sottotitolod"><a target="_blank" class="link" href="/ripasso_loc/">Vedi le location 1</a></p>
-                <p class="sottotitolod"><a target="_blank" class="link" href="/post_piccolo/">Vedi le location 2</a></p>
-                <br>
-                <p class="sottotitolod"><a class="link" href="home.html">Torna alla Home</a></p>
+                <p class="sottotitolod"><a class="link" href="index.html">Torna alla Home</a></p>
             </div>
         </center>
     </body>
