@@ -106,7 +106,6 @@
                         </td>
                     </tr>
                 </table>
-                <p class="sottotitolod"><a class="link" href="index.html">Torna alla Home</a></p>
             </div>
         </center>
     </body>

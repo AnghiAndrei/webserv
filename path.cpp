@@ -22,7 +22,9 @@ std::string ExtractFile(const std::string &directoryPath){
 std::string ExtractPath(const std::string &directoryPath){
 	size_t pos = directoryPath.find_last_of("/\\");
     if (pos == std::string::npos)
-		return "";
+		return "/";
+	if(pos==0)
+		return "/";
     return directoryPath.substr(0, pos);
 }
 

@@ -90,8 +90,10 @@ int main(int argc, char **argv, char **env){
 					url = url.substr(0, pos);
 
 					std::string location=ExtractPath(url);
-					if(webservv.servers[cli->second].locations.find(location) == webservv.servers[cli->second].locations.end())
-						location="/";
+					while(webservv.servers[cli->second].locations.find(location) == webservv.servers[cli->second].locations.end()){
+						std::cout<<"Locate: "<<location<<std::endl;
+						location=ExtractPath(location);
+					}
 
 					if(webservv.servers[cli->second].locations[location].is_allow_metod(metod)==false){
 						filePath=webservv.servers[cli->second].get_error405();
@@ -223,7 +225,6 @@ int main(int argc, char **argv, char **env){
 						}
 
 						filePath = webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location);
-						std::cout<<"File: "<<filePath<<std::endl;
 						if ((!fileExists(filePath.c_str()) && filePath[filePath.size() - 1] != '/') || (filePath[filePath.size() - 1] == '/' && !dirExists(filePath))){
 							filePath=webservv.servers[cli->second].get_error404();
 							ContentType=getext(filePath);
