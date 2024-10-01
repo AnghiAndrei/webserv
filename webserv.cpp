@@ -37,11 +37,11 @@ server::~server(){/*close(socketserverfd);*/}
 server::server(webserv &master){
     std::ostringstream cy;
     cy << master.get_n_server() + 1;
-	error404="./404.html";
-	error405="./405.html";
-	error418="./418.html";
-	error413="./413.html";
-	error500="./500.html";
+	error404="./dsite/404.html";
+	error405="./dsite/405.html";
+	error418="./dsite/418.html";
+	error413="./dsite/413.html";
+	error500="./dsite/500.html";
     name_server=("Server"+cy.str());
     host="";
     port=-1;

@@ -90,10 +90,8 @@ int main(int argc, char **argv, char **env){
 					url = url.substr(0, pos);
 
 					std::string location=ExtractPath(url);
-					while(webservv.servers[cli->second].locations.find(location) == webservv.servers[cli->second].locations.end()){
-						std::cout<<"Locate: "<<location<<std::endl;
+					while(webservv.servers[cli->second].locations.find(location) == webservv.servers[cli->second].locations.end())
 						location=ExtractPath(location);
-					}
 
 					if(webservv.servers[cli->second].locations[location].is_allow_metod(metod)==false){
 						filePath=webservv.servers[cli->second].get_error405();
@@ -192,6 +190,8 @@ int main(int argc, char **argv, char **env){
 									convertitore3 << content.size();
 									responses[servers[i].fd]="HTTP/1.1 500 Internal Server Error\nContent-Type: "+ContentType+"\nContent-Length: "+convertitore3.str()+"\n\n"+content;
 									std::cout<<"Ansower for: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
+									char buffer3[BUFFER_SIZE];
+									while ((bytesRead = read(servers[i].fd, buffer3, BUFFER_SIZE)) > 0){;}
 									continue;
 								}
 
@@ -245,13 +245,12 @@ int main(int argc, char **argv, char **env){
 									DIR				*dir;
 									struct dirent	*entry;
 									dir=opendir((webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location)).c_str());
-									std::cout<<"dir :"<<(webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location)).c_str()<<std::endl;
 									if(dir == NULL){
-										content+="<p class='sottotitolo'>Marshal: Errore in opendir</p></div></center></body></html>";										
+										content+="<p class='sottotitolo'>Marshal: Error at opendir</p></div></center></body></html>";										
 									}else{
 										entry = readdir(dir);
 										while (entry != NULL){
-											if (entry->d_type == DT_REG){
+											if (entry->d_type == DT_REG || (entry->d_type == DT_DIR && std::string(entry->d_name) != ".")){
 												std::string temp=entry->d_name;
 												content+=("<p class='sottotitolo'><a class='link' href='"+temp+"'>"+temp+"</a></p>").c_str();
 											}

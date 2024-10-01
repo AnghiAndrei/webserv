@@ -45,17 +45,17 @@
                             <form method="post" enctype="multipart/form-data">
                                 <input name="imginput" type="file" accept=".png, .jpg" display="none">
                                 <?php
-									function sposta_file($file, $destinazione) {
+									function move_file($file, $destinazione) {
 										if (file_exists($file)) {
 											rename($file, $destinazione);
 											echo "<script>window.location='funzionalita.php';</script>";
 										}
 									}
 
-									sposta_file("Rascal dosent dream of bunny girl sempai.png", './Assets/img/Rascal dosent dream of bunny girl sempai.png');
-									sposta_file("Voglio mangiare il tuo pancreas.png", './Assets/img/Voglio mangiare il tuo pancreas.png');
-									sposta_file("Darling in the FranXX.jpg", './Assets/img/Darling in the FranXX.jpg');
-									sposta_file("Your lae in April.jpg", './Assets/img/Your lae in April.jpg');
+									move_file("Rascal dosent dream of bunny girl sempai.png", './Assets/img/Rascal dosent dream of bunny girl sempai.png');
+									move_file("Voglio mangiare il tuo pancreas.png", './Assets/img/Voglio mangiare il tuo pancreas.png');
+									move_file("Darling in the FranXX.jpg", './Assets/img/Darling in the FranXX.jpg');
+									move_file("Your lae in April.jpg", './Assets/img/Your lae in April.jpg');
 								?>
                                 <br><br>
                                 <button class="pulsanti">Carica</button>
