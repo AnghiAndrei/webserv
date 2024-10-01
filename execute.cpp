@@ -90,7 +90,7 @@ t_master execute(std::string &locate, int fdc, server &server, const std::string
 		std::clock_t end = start;
 		while(true) {
 			end = std::clock();
-			if(static_cast<double>(end - start) / CLOCKS_PER_SEC >= EXECUTION_TIME_LIMIT + static_cast<double>(start) / CLOCKS_PER_SEC){
+			if(static_cast<double>(end - start) / CLOCKS_PER_SEC >= EXECUTION_TIME_LIMIT){
 				kill(pid, SIGKILL);
 				ris.status = -1;
                 ris.content = "Execute error: <br>Execution timed out";

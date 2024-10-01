@@ -225,6 +225,7 @@ int main(int argc, char **argv, char **env){
 						}
 
 						filePath = webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location);
+						std::cout<<"FilePath: "<<filePath<<std::endl;
 						if ((!fileExists(filePath.c_str()) && filePath[filePath.size() - 1] != '/') || (filePath[filePath.size() - 1] == '/' && !dirExists(filePath))){
 							filePath=webservv.servers[cli->second].get_error404();
 							ContentType=getext(filePath);
@@ -252,7 +253,10 @@ int main(int argc, char **argv, char **env){
 										while (entry != NULL){
 											if (entry->d_type == DT_REG || (entry->d_type == DT_DIR && std::string(entry->d_name) != ".")){
 												std::string temp=entry->d_name;
-												content+=("<p class='sottotitolo'><a class='link' href='"+temp+"'>"+temp+"</a></p>").c_str();
+												if(entry->d_type == DT_REG)
+													content+=("<p class='sottotitolo'><a class='link' href='"+temp+"'>"+temp+"</a></p>").c_str();
+												else
+													content+=("<p class='sottotitolo'><a class='link' href='"+temp+"/'>"+temp+"</a></p>").c_str();
 											}
 											entry = readdir(dir);
 										}
