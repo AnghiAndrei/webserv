@@ -43,17 +43,17 @@ t_master execute(std::string &locate, int fdc, server &server, const std::string
         for (size_t i = 0; env[i] != NULL; i++)
             envs.push_back(env[i]);
 
-		std::ostringstream convertitore;
-		convertitore << "CONTENT_LENGTH=" << post_query.size();
-		envs.push_back(strdup(convertitore.str().c_str()));
+		std::ostringstream convert;
+		convert << "CONTENT_LENGTH=" << post_query.size();
+		envs.push_back(strdup(convert.str().c_str()));
 
-		std::ostringstream convertitore2;
-		convertitore2 << "SERVER_PORT=" << server.get_port();
-		envs.push_back(strdup(convertitore2.str().c_str()));
+		std::ostringstream convert2;
+		convert2 << "SERVER_PORT=" << server.get_port();
+		envs.push_back(strdup(convert2.str().c_str()));
 
-		std::ostringstream convertitore3;
-		convertitore3 << "REMOTE_ADDR=" << fdc;
-		envs.push_back(strdup(convertitore3.str().c_str()));
+		std::ostringstream convert3;
+		convert3 << "REMOTE_ADDR=" << fdc;
+		envs.push_back(strdup(convert3.str().c_str()));
 
 		envs.push_back(strdup(("SCRIPT_FILENAME=" + request).c_str()));
 		envs.push_back(strdup(("SCRIPT_NAME=" + request).c_str()));

@@ -26,9 +26,9 @@ std::string ExtractPath(const std::string &directoryPath){
     return directoryPath.substr(0, pos);
 }
 
-std::string ExtensionFile(std::string nome){
-    size_t pos = nome.rfind('.');
+std::string ExtensionFile(std::string name){
+    size_t pos = name.rfind('.');
     if (pos == std::string::npos || pos == 0)
         return "";
-    return nome.substr(pos);
+    return name.substr(pos);
 }

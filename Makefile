@@ -13,7 +13,7 @@
 NAME = webserv
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
-SRC = main.cpp marshal/marshal.cpp webserv.cpp execute.cpp path.cpp print.cpp ft_strtrim.cpp
+SRC = main.cpp marshal/marshal.cpp webserv.cpp execute.cpp path.cpp print.cpp ft_strtrim.cpp webserv_utilitis.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

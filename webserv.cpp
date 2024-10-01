@@ -1,5 +1,39 @@
 #include"webserv.hpp"
 
+/* ====== LOCATION ====== */
+location::~location(){}
+location::location(){
+    root="";
+    index="";
+    showdir="yes";
+    body_size="-1";
+}
+
+void location::set_body_size(std::string copy){body_size=copy;}
+void location::set_showdir(std::string copy){showdir=copy;}
+void location::set_index(std::string copy){index=copy;}
+void location::set_root(std::string copy){root=copy;}
+std::string location::get_root(){return root;}
+std::string location::get_index(){return index;}
+std::string location::get_showdir(){return showdir;}
+std::string location::get_body_size(){return body_size;}
+
+void location::set_medallow(std::vector<std::string> copy){this->med_allow.insert(med_allow.begin(), copy.begin(), copy.end());}
+std::string location::get_medallow(size_t index){return med_allow[index];}
+size_t location::get_lmedallow(){return med_allow.size();}
+bool location::is_allow_metod(std::string metod){
+    std::vector<std::string>::iterator temp=std::find(med_allow.begin(), med_allow.end(), metod);
+    if(temp!=med_allow.end())
+        return true;
+    return false;
+}
+
+void location::set_ridirect(std::vector<std::string> copy){this->ridirect.insert(ridirect.begin(), copy.begin(), copy.end());}
+std::string location::get_ridirect(size_t index){return ridirect[index];}
+size_t location::get_lridirect(){return ridirect.size();}
+
+/* ====== SERVER ====== */
+server::~server(){/*close(socketserverfd);*/}
 server::server(webserv &master){
     std::ostringstream cy;
     cy << master.get_n_server() + 1;
@@ -13,65 +47,53 @@ server::server(webserv &master){
     port=-1;
 }
 
-int setnblocking(int socket) {
-    int flags=fcntl(socket, F_GETFL, 0);
-    if(flags==-1){
-		std::cout<<"Marshal: Fcntl failed"<<std::endl;
+void server::set_error404(std::string &copy){error404=copy;}
+void server::set_error405(std::string &copy){error405=copy;}
+void server::set_error418(std::string &copy){error418=copy;}
+void server::set_error413(std::string &copy){error413=copy;}
+void server::set_error500(std::string &copy){error500=copy;}
+void server::set_name(std::string &copy){name_server=copy;}
+void server::set_host(std::string &copy){host=copy;}
+void server::set_port(int copy){port=copy;}
+int server::get_port(){return port;}
+std::string server::get_host(){return host;}
+int server::get_fd(){return socketserverfd;}
+std::string server::get_name(){return name_server;}
+std::string server::get_error500(){return error500;}
+std::string server::get_error418(){return error418;}
+std::string server::get_error413(){return error413;}
+std::string server::get_error404(){return error404;}
+std::string server::get_error405(){return error405;}
+
+void server::start(){
+    struct sockaddr_in address;
+    int opt = 1;
+
+    if((socketserverfd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        std::cout<<"Marshal: Socket failed"<<std::endl;
         exit(-1);
     }
-    flags |= O_NONBLOCK;
-    if (fcntl(socket, F_SETFL, flags) == -1) {
-        std::cout<<"Marshal: Fcntl failed"<<std::endl;
+    if(setsockopt(socketserverfd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+        std::cout<<"Marshal: Setsockopt failed"<<std::endl;
         exit(-1);
     }
-    return 0;
-}
-
-std::string readFile(const std::string &filePath) {
-    std::ifstream file(filePath.c_str());
-    if (!file.is_open()) {
-        return "";
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(port);
+    if(bind(socketserverfd, (struct sockaddr *)&address, sizeof(address))<0){
+        std::cout<<"Marshal: Bind failed"<<std::endl;
+        exit(-1);
     }
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
-}
-
-bool endsWith(const std::string &str, const std::string &suffix){return str.size() >= suffix.size() && str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;}
-std::string getext(const std::string &path){
-    if (endsWith(path, ".html"))
-        return "text/html";
-	else if (endsWith(path, ".php"))
-        return "text/html";
-    else if (endsWith(path, ".sh"))
-        return "text/html";
-    else if (endsWith(path, ".py"))
-        return "text/html";
-    else if (endsWith(path, ".css"))
-        return "text/css";
-    else if (endsWith(path, ".js"))
-        return "application/javascript";
-    else if (endsWith(path, ".png"))
-        return "image/png";
-	else if (endsWith(path, ".jpg") || endsWith(path, ".jpeg"))
-        return "image/jpeg";
-    else
-        return "application/octet-stream";
-}
-
-t_master leggi_file(std::string &locate, std::string &filePath, int fdc, server &server, char **env, std::string &query_get, std::string &query_post){
-	if(server.locations[locate].gci.find(ExtensionFile(filePath)) == server.locations[locate].gci.end()){
-	    t_master ris;
-		ris.content=readFile(filePath);
-		ris.status=0;
-        return ris;
+    if(listen(socketserverfd, 3)<0){
+        std::cout<<"Marshal: Listen failed"<<std::endl;
+        exit(-1);
     }
-    return execute(locate, fdc, server, filePath, env, query_get, query_post);
+    setnblocking(socketserverfd);
 }
 
-unsigned long long int stoull(const std::string &str) {
-    unsigned long long int result = 0;
-    std::istringstream iss(str);
-    iss >> result;
-    return result;
-}
+/* ====== WEBSERV ====== */
+void webserv::create_server(){servers.push_back(server(*this));}
+size_t	webserv::get_n_server(){return servers.size();}
+void webserv::set_nserv(size_t serv){this->nserv=serv;}
+webserv::webserv(){nserv=0;}
+webserv::~webserv(){}

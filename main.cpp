@@ -58,7 +58,7 @@ int main(int argc, char **argv, char **env){
 						pfd.revents = 0;
 						servers.push_back(pfd);
 						client_to_server[new_socket] = i2;
-						std::cout << "Nuova connessione nel fd: " << webservv.servers[i2].get_fd() << std::endl;
+						std::cout << "New connection in fd: " << webservv.servers[i2].get_fd() << std::endl;
 					}
 				}
                 if (!isNewConnection){
@@ -96,12 +96,12 @@ int main(int argc, char **argv, char **env){
 					if(webservv.servers[cli->second].locations[location].is_allow_metod(metod)==false){
 						filePath=webservv.servers[cli->second].get_error405();
 						ContentType=getext(filePath);
-						ris = leggi_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
+						ris = read_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
 						content = ris.content;
 						std::ostringstream convertitore2;
 						convertitore2 << content.size();
 						responses[servers[i].fd]="HTTP/1.1 405 Metod not Allow\nContent-Type: "+ContentType+"\nContent-Length: "+convertitore2.str()+"\n\n"+content;
-						std::cout<<"Risposta per: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
+						std::cout<<"Ansower for: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
 						continue;
 					}
 
@@ -116,12 +116,12 @@ int main(int argc, char **argv, char **env){
 					if(ContentLength>stoull(webservv.servers[cli->second].locations[location].get_body_size().c_str())){
 						filePath=webservv.servers[cli->second].get_error413();
 						ContentType=getext(filePath);
-						ris = leggi_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
+						ris = read_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
 						content = ris.content;
 						std::ostringstream convertitore2;
 						convertitore2 << content.size();
 						responses[servers[i].fd]="HTTP/1.1 413 OK\nContent-Type: "+ContentType+"\nContent-Length: "+convertitore2.str()+"\n\n"+content;
-						std::cout<<"Risposta per: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
+						std::cout<<"Ansower for: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
 						char buffer2[BUFFER_SIZE];
 						while ((bytesRead = read(servers[i].fd, buffer2, BUFFER_SIZE)) > 0){;}
 						continue;
@@ -131,24 +131,24 @@ int main(int argc, char **argv, char **env){
 						if ((location=="/" && url == webservv.servers[cli->second].locations[location].get_ridirect(0)) || url == location+webservv.servers[cli->second].locations[location].get_ridirect(0)) {
 							std::string newLocation=webservv.servers[cli->second].locations[location].get_ridirect(1);
 							responses[servers[i].fd]="HTTP/1.1 301 Moved Permanently\nLocation: "+newLocation+"\n\n";
-							std::cout<<"Risposta per: "<<servers[i].fd<<"; con: REDIRECT"<<std::endl;
+							std::cout<<"Ansower for: "<<servers[i].fd<<"; con: REDIRECT"<<std::endl;
 							continue;
 						}
 					}
 
-					size_t posspazi=url.find("%20");
-					while(posspazi!=std::string::npos){
-						url.replace(posspazi, 3, " ");
-						posspazi=url.find("%20");
+					size_t posspace=url.find("%20");
+					while(posspace!=std::string::npos){
+						url.replace(posspace, 3, " ");
+						posspace=url.find("%20");
 					}
 					if(metod=="DELETE"){
 						if(std::remove((webservv.servers[cli->second].locations[location].get_root()+url).c_str())==0){
 							responses[servers[i].fd]="HTTP/1.1 200 OK\r\n\r\n";
-							std::cout<<"Risposta per: "<<servers[i].fd<<"; con: OK"<<std::endl;
+							std::cout<<"Ansower for: "<<servers[i].fd<<"; con: OK"<<std::endl;
 							continue;
 						}else{
 							responses[servers[i].fd]="HTTP/1.1 404 Not Found\r\n\r\n";
-							std::cout<<"Risposta per: "<<servers[i].fd<<"; con: Error"<<std::endl;
+							std::cout<<"Ansower for: "<<servers[i].fd<<"; con: Error"<<std::endl;
 							continue;
 						}
 					}else if(metod=="GET" || metod=="POST"){
@@ -184,12 +184,12 @@ int main(int argc, char **argv, char **env){
 								if (!file_out.is_open()){
 									filePath=webservv.servers[cli->second].get_error500();
 									ContentType=getext(filePath);
-									ris = leggi_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
+									ris = read_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
 									content = ris.content;
 									std::ostringstream convertitore3;
 									convertitore3 << content.size();
 									responses[servers[i].fd]="HTTP/1.1 500 Internal Server Error\nContent-Type: "+ContentType+"\nContent-Length: "+convertitore3.str()+"\n\n"+content;
-									std::cout<<"Risposta per: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
+									std::cout<<"Ansower for: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
 									continue;
 								}
 
@@ -227,12 +227,12 @@ int main(int argc, char **argv, char **env){
 						if ((!fileExists(filePath.c_str()) && filePath[filePath.size() - 1] != '/') || (filePath[filePath.size() - 1] == '/' && !dirExists(filePath))){
 							filePath=webservv.servers[cli->second].get_error404();
 							ContentType=getext(filePath);
-							ris = leggi_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
+							ris = read_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
 							content = ris.content;
 							std::ostringstream convertitore2;
 							convertitore2 << content.size();
 							responses[servers[i].fd]="HTTP/1.1 404 Not Found\nContent-Type: "+ContentType+"\nContent-Length: "+convertitore2.str()+"\n\n"+content;
-							std::cout<<"Risposta per: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
+							std::cout<<"Ansower for: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
 							continue;
 						}else if(filePath[filePath.size()-1]=='/'){
 							filePath=webservv.servers[cli->second].locations[location].get_root()+ft_strtrim(url, location)+webservv.servers[cli->second].locations[location].get_index();
@@ -264,27 +264,27 @@ int main(int argc, char **argv, char **env){
 								content+="</div></center></body></html>";
 							}else{
 								ContentType=getext(filePath);
-								ris=leggi_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
+								ris=read_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
 								content = ris.content;
 							}
 						}else{
 							ContentType=getext(filePath);
-							ris=leggi_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
+							ris=read_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
 							content = ris.content;
 						}
 						std::ostringstream convertitore;
 						convertitore << content.size();
 						responses[servers[i].fd]="HTTP/1.1 200 OK\nContent-Type: "+ContentType+"\nContent-Length: "+convertitore.str()+"\n\n"+content;
-						std::cout<<"Risposta per: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
+						std::cout<<"Ansower for: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
 					}else{
 						filePath=webservv.servers[cli->second].get_error405();
 						ContentType=getext(filePath);
-						ris = leggi_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
+						ris = read_file(location, filePath, servers[i].fd, webservv.servers[cli->second], env, query_get, query_post);
 						content = ris.content;
 						std::ostringstream convertitore2;
 						convertitore2 << content.size();
 						responses[servers[i].fd]="HTTP/1.1 405 Metod not Allow\nContent-Type: "+ContentType+"\nContent-Length: "+convertitore2.str()+"\n\n"+content;
-						std::cout<<"Risposta per: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
+						std::cout<<"Ansower for: "<<servers[i].fd<<"; con: "<<filePath<<std::endl;
 					}
 				}
             }else if (servers[i].revents & POLLOUT){
@@ -293,7 +293,7 @@ int main(int argc, char **argv, char **env){
                     int sendb=send(servers[i].fd, it->second.c_str(), (it->second.size()+1), 0);
                     responses.erase(it);
 					if(sendb==-1){
-						std::cout<<"Errore nell'invio di dati a fd: "<<servers[i].fd << std::endl;
+						std::cout<<"Error at share data whit fd: "<<servers[i].fd << std::endl;
 						std::map<int, std::string>::iterator postit2 = post_save.find(servers[i].fd);
 						if (postit2 !=post_save.end())
 							post_save.erase(postit2);
