@@ -1,7 +1,7 @@
 # 42 Project: Webserv
 
 ## Watch the Video
-[![Watch the video](aa.png)](https://andreianghi.ddns.net/Assets/img/progetti/1724.webm)
+[![Watch the video](https://andreianghi.ddns.net/Assets/img/progetti/Screenshot_92.png)](https://andreianghi.ddns.net/Assets/img/progetti/webserv.mp4)
 
 ## Description
 This project is developed in C++ on Ubuntu Linux
